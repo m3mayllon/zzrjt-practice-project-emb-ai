@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
-from nlp.sentiment import sentiment_analyzer
+'''This module runs Flask web framework on debug mode.'''
 
-app = Flask('Sentiment Analyzer')
+from flask import Flask, render_template, request
+from SentimentAnalysis.sentiment_analysis import sentiment_analyzer
+
+app = Flask('')
 
 
 @app.route('/')
@@ -14,26 +16,23 @@ def render_index_page():
 
 
 @app.route('/sentimentAnalyzer')
-def sent_analyzer():
+def analyze_sentiment():
     '''
-    This code receives the text from the HTML interface and 
-    runs sentiment analysis over it using sentiment_analysis()
-    function. The output returned shows the label and its confidence 
-    score for the provided text.
+    This funtion receives a text from the HTML interface and runs sentiment_analyzer() function.
+    The output shows provided text sentiment scores detected.
     '''
 
-    text = request.args.get('textToAnalyze')
-    data = sentiment_analyzer(text)
+    data = sentiment_analyzer(request.args.get('textToAnalyze'))
 
     label = data['label']
     score = data['score']
 
     if not label or not score:
-        return 'Invalid input! Try again.', 200
+        return 'Invalid text! Please try again!'
 
-    return f'The given text has been identified as {label} with a score of {score}.', 200
+    return f'The given text has been identified as {label} with a score of {score}.'
 
 
 if __name__ == '__main__':
 
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
