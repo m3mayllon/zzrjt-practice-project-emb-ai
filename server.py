@@ -1,6 +1,7 @@
 '''This module runs Flask web framework on debug mode.'''
 
 from flask import Flask, render_template, request
+from EmotionDetection.emotion_detection import emotion_detector
 from SentimentAnalysis.sentiment_analysis import sentiment_analyzer
 
 app = Flask('')
@@ -13,6 +14,26 @@ def render_index_page():
     page over the Flask channel
     '''
     return render_template('index.html')
+
+
+@app.route('/emotionDetector')
+def detect_emotion():
+    '''
+    This funtion receives a text from the HTML interface and runs emotion_detection() function.
+    The output shows provided text emotion scores detected along with the dominant emotion.
+    '''
+
+    data = emotion_detector(request.args.get('textToAnalyze'))
+
+    score_string = ', '.join(
+        f"'{k}': {v}" for k, v in data.items() if k != 'dominant_emotion')
+    dominant = data.get('dominant_emotion')
+
+    if not dominant:
+        return 'Invalid text! Please try again!'
+
+    return f'For the given statement, the system response is {score_string}. \
+        The dominant emotion is {dominant}.'
 
 
 @app.route('/sentimentAnalyzer')
