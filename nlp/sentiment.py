@@ -26,7 +26,8 @@ def sentiment_analyzer(text: str, url: Union[str, None] = None, headers: Union[d
         try:
             data = {'raw_document': {'text': text}}
 
-            resp = requests.post(url, headers=headers, json=data, timeout=10)
+            resp = requests.post(
+                url, headers=headers, json=data, timeout=TIMEOUT)
             resp.raise_for_status()
 
             resp_json = resp.json()
