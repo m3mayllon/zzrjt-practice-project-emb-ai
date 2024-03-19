@@ -30,6 +30,8 @@ def sentiment_analyzer(text: str, url: Union[str, None] = None, headers: Union[d
             label = resp_json.get('documentSentiment', {}).get('label')
             score = resp_json.get('documentSentiment', {}).get('score')
 
+            label = label.split('_')[1]
+
             return {'label': label, 'score': score}
 
         except (ConnectionError, Timeout) as e:
