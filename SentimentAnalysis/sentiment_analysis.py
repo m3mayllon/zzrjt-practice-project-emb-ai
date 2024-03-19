@@ -8,6 +8,7 @@ TIMEOUT = 10
 
 
 def sentiment_analyzer(text: str, url: Union[str, None] = None, headers: Union[dict, None] = None) -> dict:
+    '''This function uses Watson NLP Library to analyze sentiment from text.'''
 
     error_response = {'label': None, 'score': None}
 
@@ -25,13 +26,17 @@ def sentiment_analyzer(text: str, url: Union[str, None] = None, headers: Union[d
     for attempt in range(MAX_RETRIES):
         try:
             data = {'raw_document': {'text': text}}
-
             resp = requests.post(
                 url, headers=headers, json=data, timeout=TIMEOUT)
-            resp.raise_for_status()
+
+            # check if the status code is not in 2XX range
+            if not resp.status_code // 100 == 2:
+                print(f'Unexpected status code {resp.status_code}')
+                return error_response
 
             resp_json = resp.json()
 
+            # parse sentiment
             label = resp_json.get('documentSentiment', {}).get('label')
             score = resp_json.get('documentSentiment', {}).get('score')
 
