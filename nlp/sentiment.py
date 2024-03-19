@@ -11,6 +11,10 @@ def sentiment_analyzer(text: str, url: Union[str, None] = None, headers: Union[d
 
     error_response = {'label': None, 'score': None}
 
+    if not text:
+        print('Input text cannot be empty')
+        return error_response
+
     if not url:
         url = 'https://sn-watson-sentiment-bert.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/SentimentPredict'
 

@@ -28,6 +28,9 @@ def sent_analyzer():
     label = data['label']
     score = data['score']
 
+    if not label or not score:
+        return 'Invalid input! Try again.', 200
+
     return f'The given text has been identified as {label} with a score of {score}.', 200
 
 
